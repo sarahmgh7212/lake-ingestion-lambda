@@ -10,6 +10,11 @@
       "StackName": "amplify-lakeingestion-dev-111848",
       "StackId": "arn:aws:cloudformation:ap-southeast-2:004379634490:stack/amplify-lakeingestion-dev-111848/5cc67c20-8b6d-11eb-8d95-0a52ea769fe4",
       "AmplifyAppId": "ds08n6pd1kbh0"
+    },
+    "categories": {
+      "auth": {
+        "lakeingestion40caa34a": {}
+      }
     }
   }
 }

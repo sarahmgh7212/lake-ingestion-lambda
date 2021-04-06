@@ -1,0 +1,85 @@
+type SourceType @model {
+  id: ID!
+  name: String!
+  configSchema: AWSJSON!
+  container: String
+  taskARN: String
+}
+
+type Source @model {
+  id: ID!
+  name: String!
+  config: String
+  sourceType: SourceType @connection(keyName: "bySourceType")
+  team: [Team] @connection(keyName: "bySource")
+}
+
+type Job @model {
+  id: ID!
+  pipe: Pipe
+  startedAt: AWSDateTime
+  initCompletedAt: AWSDateTime
+  completedAt: AWSDateTime
+  failedAt: AWSDateTime
+  logsARN: String
+}
+
+type Pipe @model {
+  id: ID!
+  name: String
+  catalog: AWSJSON
+  schedule: String #cron string
+  status: PipeStatus
+  jobId: ID!
+  job: Job @connection(fields: ["jobId"])
+}
+
+enum PipeStatus {
+  DISABLED
+  ENABLED
+}
+
+type User @model {
+  id: ID!
+  name: String!
+
+  teams: [TeamUser] @connection(keyName: "byUser", fields: ["id"])
+  invites: [Invite] @connection(keyName: "byUser", fields: ["id"])
+  requestedInvites: [Invite] @connection(keyName: "byRequestor", fields: ["id"])
+}
+
+type Team @model {
+  id: ID!
+  name: String!
+
+  users: [TeamUser] @connection(keyName: "byTeam", fields: ["id"])
+  invites: [Invite] @connection(keyName: "byTeam", fields: ["id"])
+}
+
+type TeamUser
+  @model
+  @key(name: "byUser", fields: ["userId", "teamId"])
+  @key(name: "byTeam", fields: ["teamId", "userId"]) {
+  id: ID!
+  teamId: ID!
+  userId: ID!
+
+  team: Team! @connection(fields: ["teamId"])
+  user: User! @connection(fields: ["userId"])
+}
+
+type Invite
+  @model
+  @key(name: "byUser", fields: ["userId", "teamId"])
+  @key(name: "byRequestor", fields: ["requestorId", "teamId"])
+  @key(name: "byTeam", fields: ["teamId"]) {
+  id: ID!
+  userId: ID
+  teamId: ID!
+  email: String!
+  requestorId: ID!
+
+  user: User @connection(fields: ["userId"])
+  team: Team! @connection(fields: ["teamId"])
+  requestor: User @connection(fields: ["userId"])
+}

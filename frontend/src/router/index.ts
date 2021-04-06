@@ -1,11 +1,33 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Home from "../views/Home.vue";
+import pagesRoutes from "./pages";
+import authRoutes from "./auth";
+import appRoutes from "./app";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    redirect: "/app/",
+  },
+
+  {
+    path: "/app",
+    children: appRoutes,
+    component: () =>
+      import(/* webpackChunkName: "mist-app" */ "../layouts/AppLayout.vue"),
+  },
+
+  {
+    path: "/pages",
+    children: pagesRoutes,
+    component: () =>
+      import(/* webpackChunkName: "pages" */ "../layouts/PageLayout.vue"),
+  },
+
+  {
+    path: "/auth",
+    children: authRoutes,
+    component: () =>
+      import(/* webpackChunkName: "auth" */ "../layouts/AuthLayout.vue"),
   },
   {
     path: "/about",
@@ -19,6 +41,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
+  
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
