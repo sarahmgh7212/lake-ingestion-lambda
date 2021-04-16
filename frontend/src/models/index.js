@@ -2,6 +2,12 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema';
 
+const UserRole = {
+  "READER": "READER",
+  "MANAGER": "MANAGER",
+  "OWNER": "OWNER"
+};
+
 const PipeStatus = {
   "DISABLED": "DISABLED",
   "ENABLED": "ENABLED"
@@ -18,5 +24,6 @@ export {
   Invite,
   Job,
   Pipe,
+  UserRole,
   PipeStatus
 };

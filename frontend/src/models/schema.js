@@ -21,7 +21,7 @@ export const schema = {
                     "name": "configSchema",
                     "isArray": false,
                     "type": "AWSJSON",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "container": {
@@ -181,6 +181,15 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "role": {
+                    "name": "role",
+                    "isArray": false,
+                    "type": {
+                        "enum": "UserRole"
+                    },
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "team": {
                     "name": "team",
                     "isArray": false,
@@ -251,6 +260,15 @@ export const schema = {
                     "name": "name",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "role": {
+                    "name": "role",
+                    "isArray": false,
+                    "type": {
+                        "enum": "UserRole"
+                    },
                     "isRequired": true,
                     "attributes": []
                 },
@@ -355,19 +373,6 @@ export const schema = {
                         "connectionType": "BELONGS_TO",
                         "targetName": "teamId"
                     }
-                },
-                "requestor": {
-                    "name": "requestor",
-                    "isArray": false,
-                    "type": {
-                        "model": "User"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "userId"
-                    }
                 }
             },
             "syncable": true,
@@ -425,8 +430,8 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "initCompletedAt": {
-                    "name": "initCompletedAt",
+                "initAt": {
+                    "name": "initAt",
                     "isArray": false,
                     "type": "AWSDateTime",
                     "isRequired": false,
@@ -452,6 +457,19 @@ export const schema = {
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
+                },
+                "pipe": {
+                    "name": "pipe",
+                    "isArray": false,
+                    "type": {
+                        "model": "Pipe"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "id"
+                    }
                 }
             },
             "syncable": true,
@@ -506,22 +524,22 @@ export const schema = {
                 "jobId": {
                     "name": "jobId",
                     "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
-                "job": {
-                    "name": "job",
-                    "isArray": false,
+                "jobs": {
+                    "name": "jobs",
+                    "isArray": true,
                     "type": {
                         "model": "Job"
                     },
                     "isRequired": false,
                     "attributes": [],
+                    "isArrayNullable": true,
                     "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": "id",
-                        "targetName": "jobId"
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "pipe"
                     }
                 }
             },
@@ -536,6 +554,14 @@ export const schema = {
         }
     },
     "enums": {
+        "UserRole": {
+            "name": "UserRole",
+            "values": [
+                "READER",
+                "MANAGER",
+                "OWNER"
+            ]
+        },
         "PipeStatus": {
             "name": "PipeStatus",
             "values": [
@@ -545,5 +571,5 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "version": "d9acc0a0bff0908d0c90521968d71dc1"
+    "version": "8ff30e1bb29bb3b5d8395bf24c1a1200"
 };

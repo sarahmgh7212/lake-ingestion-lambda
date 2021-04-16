@@ -1,7 +1,7 @@
 type SourceType @model {
   id: ID!
   name: String!
-  configSchema: AWSJSON!
+  configSchema: AWSJSON
   container: String
   taskARN: String
 }
@@ -16,12 +16,14 @@ type Source @model {
 
 type Job @model {
   id: ID!
-  pipe: Pipe
+  # pipe: Pipe
+  # pipeId: ID!
   startedAt: AWSDateTime
-  initCompletedAt: AWSDateTime
+  initAt: AWSDateTime
   completedAt: AWSDateTime
   failedAt: AWSDateTime
   logsARN: String
+  pipe: Pipe @connection(fields: ["id"])
 }
 
 type Pipe @model {
@@ -30,8 +32,8 @@ type Pipe @model {
   catalog: AWSJSON
   schedule: String #cron string
   status: PipeStatus
-  jobId: ID!
-  job: Job @connection(fields: ["jobId"])
+  jobId: String
+  jobs: [Job] @connection(fields: ["id"])
 }
 
 enum PipeStatus {
@@ -42,10 +44,15 @@ enum PipeStatus {
 type User @model {
   id: ID!
   name: String!
-
+  role: UserRole!
   teams: [TeamUser] @connection(keyName: "byUser", fields: ["id"])
   invites: [Invite] @connection(keyName: "byUser", fields: ["id"])
   requestedInvites: [Invite] @connection(keyName: "byRequestor", fields: ["id"])
+}
+enum UserRole {
+  READER
+  MANAGER
+  OWNER
 }
 
 type Team @model {
@@ -63,7 +70,7 @@ type TeamUser
   id: ID!
   teamId: ID!
   userId: ID!
-
+  role: UserRole!
   team: Team! @connection(fields: ["teamId"])
   user: User! @connection(fields: ["userId"])
 }
@@ -77,9 +84,8 @@ type Invite
   userId: ID
   teamId: ID!
   email: String!
-  requestorId: ID!
-
+  requestorId: ID! #difference between userId and requestorId????
   user: User @connection(fields: ["userId"])
   team: Team! @connection(fields: ["teamId"])
-  requestor: User @connection(fields: ["userId"])
+  # requestor: User @connection(fields: ["requestorId"]) #does not work properly(should say no such user exists) ?????
 }

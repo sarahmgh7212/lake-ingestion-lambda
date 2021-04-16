@@ -62,20 +62,25 @@ export const module: Module<SourceTypesBaseState, GenericObject> = {
     },
 
     [ActionTypes.SUBSCRIBE]({ commit }) {
-      const subscription = DataStore.observe(SourceType).subscribe((msg) => {
-        const sourceType = msg.element;
+      const subscription = DataStore.observe(SourceType).subscribe(
+        (msg) => {
+          const sourceType = msg.element;
 
-        if ([OpType.INSERT, OpType.UPDATE].includes(msg.opType)) {
-          commit(MutationTypes.UPSERT_SOURCE, {
-            id: sourceType.id,
-            sourceType,
-          });
-        } else if (msg.opType === OpType.DELETE) {
-          commit(MutationTypes.DELETE_SOURCE, { id: sourceType.id });
-        } else {
-          throw new Error("Unsupported operation in sourceTypes subcription");
+          if ([OpType.INSERT, OpType.UPDATE].includes(msg.opType)) {
+            commit(MutationTypes.UPSERT_SOURCE, {
+              id: sourceType.id,
+              sourceType,
+            });
+          } else if (msg.opType === OpType.DELETE) {
+            commit(MutationTypes.DELETE_SOURCE, { id: sourceType.id });
+          } else {
+            throw new Error("Unsupported operation in sourceTypes subcription");
+          }
+        },
+        (err) => {
+          console.log(err);
         }
-      });
+      );
 
       commit(MutationTypes.SET_SUBSCRIPTION, { subscription });
     },

@@ -80,6 +80,11 @@ export const getJob = /* GraphQL */ `
   query GetJob($id: ID!) {
     getJob(id: $id) {
       id
+      startedAt
+      initAt
+      completedAt
+      failedAt
+      logsARN
       pipe {
         id
         name
@@ -90,11 +95,6 @@ export const getJob = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      startedAt
-      initCompletedAt
-      completedAt
-      failedAt
-      logsARN
       createdAt
       updatedAt
     }
@@ -110,7 +110,7 @@ export const listJobs = /* GraphQL */ `
       items {
         id
         startedAt
-        initCompletedAt
+        initAt
         completedAt
         failedAt
         logsARN
@@ -130,15 +130,8 @@ export const getPipe = /* GraphQL */ `
       schedule
       status
       jobId
-      job {
-        id
-        startedAt
-        initCompletedAt
-        completedAt
-        failedAt
-        logsARN
-        createdAt
-        updatedAt
+      jobs {
+        nextToken
       }
       createdAt
       updatedAt
@@ -171,6 +164,7 @@ export const getUser = /* GraphQL */ `
     getUser(id: $id) {
       id
       name
+      role
       teams {
         nextToken
       }
@@ -195,6 +189,7 @@ export const listUsers = /* GraphQL */ `
       items {
         id
         name
+        role
         createdAt
         updatedAt
       }
@@ -241,6 +236,7 @@ export const getTeamUser = /* GraphQL */ `
       id
       teamId
       userId
+      role
       team {
         id
         name
@@ -250,6 +246,7 @@ export const getTeamUser = /* GraphQL */ `
       user {
         id
         name
+        role
         createdAt
         updatedAt
       }
@@ -269,6 +266,7 @@ export const listTeamUsers = /* GraphQL */ `
         id
         teamId
         userId
+        role
         createdAt
         updatedAt
       }
@@ -287,16 +285,11 @@ export const getInvite = /* GraphQL */ `
       user {
         id
         name
+        role
         createdAt
         updatedAt
       }
       team {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      requestor {
         id
         name
         createdAt

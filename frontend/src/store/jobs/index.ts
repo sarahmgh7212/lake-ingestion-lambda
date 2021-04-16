@@ -82,7 +82,7 @@ export const module: Module<JobsBaseState, GenericObject> = {
     async [ActionTypes.CREATE](ctx, { job }) {
       await DataStore.save(
         new Job({
-          initCompletedAt: job.initCompletedAt,
+          initAt: job.initAt,
           startedAt: job.startedAt,
           completedAt: job.completedAt,
           failedAt: job.failedAt,
@@ -100,7 +100,7 @@ export const module: Module<JobsBaseState, GenericObject> = {
 
       await DataStore.save(
         Job.copyOf(original, (updated) => {
-          updated.initCompletedAt = job.initCompletedAt;
+          updated.initAt = job.initAt;
           updated.startedAt = job.startedAt;
           updated.completedAt = job.completedAt;
           updated.failedAt = job.failedAt;

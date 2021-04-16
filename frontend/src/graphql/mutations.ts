@@ -135,6 +135,11 @@ export const createJob = /* GraphQL */ `
   ) {
     createJob(input: $input, condition: $condition) {
       id
+      startedAt
+      initAt
+      completedAt
+      failedAt
+      logsARN
       pipe {
         id
         name
@@ -145,11 +150,6 @@ export const createJob = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      startedAt
-      initCompletedAt
-      completedAt
-      failedAt
-      logsARN
       createdAt
       updatedAt
     }
@@ -162,6 +162,11 @@ export const updateJob = /* GraphQL */ `
   ) {
     updateJob(input: $input, condition: $condition) {
       id
+      startedAt
+      initAt
+      completedAt
+      failedAt
+      logsARN
       pipe {
         id
         name
@@ -172,11 +177,6 @@ export const updateJob = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      startedAt
-      initCompletedAt
-      completedAt
-      failedAt
-      logsARN
       createdAt
       updatedAt
     }
@@ -189,6 +189,11 @@ export const deleteJob = /* GraphQL */ `
   ) {
     deleteJob(input: $input, condition: $condition) {
       id
+      startedAt
+      initAt
+      completedAt
+      failedAt
+      logsARN
       pipe {
         id
         name
@@ -199,11 +204,6 @@ export const deleteJob = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      startedAt
-      initCompletedAt
-      completedAt
-      failedAt
-      logsARN
       createdAt
       updatedAt
     }
@@ -221,15 +221,8 @@ export const createPipe = /* GraphQL */ `
       schedule
       status
       jobId
-      job {
-        id
-        startedAt
-        initCompletedAt
-        completedAt
-        failedAt
-        logsARN
-        createdAt
-        updatedAt
+      jobs {
+        nextToken
       }
       createdAt
       updatedAt
@@ -248,15 +241,8 @@ export const updatePipe = /* GraphQL */ `
       schedule
       status
       jobId
-      job {
-        id
-        startedAt
-        initCompletedAt
-        completedAt
-        failedAt
-        logsARN
-        createdAt
-        updatedAt
+      jobs {
+        nextToken
       }
       createdAt
       updatedAt
@@ -275,15 +261,8 @@ export const deletePipe = /* GraphQL */ `
       schedule
       status
       jobId
-      job {
-        id
-        startedAt
-        initCompletedAt
-        completedAt
-        failedAt
-        logsARN
-        createdAt
-        updatedAt
+      jobs {
+        nextToken
       }
       createdAt
       updatedAt
@@ -298,6 +277,7 @@ export const createUser = /* GraphQL */ `
     createUser(input: $input, condition: $condition) {
       id
       name
+      role
       teams {
         nextToken
       }
@@ -320,6 +300,7 @@ export const updateUser = /* GraphQL */ `
     updateUser(input: $input, condition: $condition) {
       id
       name
+      role
       teams {
         nextToken
       }
@@ -342,6 +323,7 @@ export const deleteUser = /* GraphQL */ `
     deleteUser(input: $input, condition: $condition) {
       id
       name
+      role
       teams {
         nextToken
       }
@@ -422,6 +404,7 @@ export const createTeamUser = /* GraphQL */ `
       id
       teamId
       userId
+      role
       team {
         id
         name
@@ -431,6 +414,7 @@ export const createTeamUser = /* GraphQL */ `
       user {
         id
         name
+        role
         createdAt
         updatedAt
       }
@@ -448,6 +432,7 @@ export const updateTeamUser = /* GraphQL */ `
       id
       teamId
       userId
+      role
       team {
         id
         name
@@ -457,6 +442,7 @@ export const updateTeamUser = /* GraphQL */ `
       user {
         id
         name
+        role
         createdAt
         updatedAt
       }
@@ -474,6 +460,7 @@ export const deleteTeamUser = /* GraphQL */ `
       id
       teamId
       userId
+      role
       team {
         id
         name
@@ -483,6 +470,7 @@ export const deleteTeamUser = /* GraphQL */ `
       user {
         id
         name
+        role
         createdAt
         updatedAt
       }
@@ -505,16 +493,11 @@ export const createInvite = /* GraphQL */ `
       user {
         id
         name
+        role
         createdAt
         updatedAt
       }
       team {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      requestor {
         id
         name
         createdAt
@@ -539,16 +522,11 @@ export const updateInvite = /* GraphQL */ `
       user {
         id
         name
+        role
         createdAt
         updatedAt
       }
       team {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      requestor {
         id
         name
         createdAt
@@ -573,16 +551,11 @@ export const deleteInvite = /* GraphQL */ `
       user {
         id
         name
+        role
         createdAt
         updatedAt
       }
       team {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      requestor {
         id
         name
         createdAt

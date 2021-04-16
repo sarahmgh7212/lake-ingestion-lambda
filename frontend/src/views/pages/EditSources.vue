@@ -4,21 +4,6 @@
       <div id="list-sources">
         <div>
           <form @submit.prevent="handleSubmit"></form>
-          <!-- <input
-            type="text"
-            v-bind:value="source.name"
-            id="source_name"
-            ref="source_name"
-            placeholder="Name"
-          />
-          <input
-            type="text"
-            v-bind:value="source.url"
-            ref="url"
-            id="url"
-            placeholder="URL"
-          /> -->
-
           <input
             type="text"
             id="source_name"
@@ -27,10 +12,9 @@
           />
           <input
             type="text"
-            v-model="source.url"
-            ref="url"
-            id="url"
-            placeholder="URL"
+            v-model="source.config"
+            id="config"
+            placeholder="Config"
           />
           <button class="bg-red-100" @click="onSubmitClicked()">Submit</button>
         </div>
@@ -57,32 +41,14 @@ export default defineComponent({
     ...mapState(sources.NAMESPACE, ["sources"]),
   },
   methods: {
-    // onSubmitClicked(source) {
-    //   //  e.preventDefault()
-    //   const { id, sourceName, url } = { ...source };
-    //   // const editedSource = { name, url };
-    //   this.source.name = this.$ref["source_name"].value;
-    //   this.source.url = this.$ref["url"].value;
-    //   // this.source.name = document.getElementById("source_name").value;
-    //   // this.source.url = document.getElementById("url").value;
-    //   const editedSource = {
-    //     sourceName: this.source.sourceName,
-    //     url: this.source.url,
-    //   };
-    //   this.$store.dispatch(sources.NamespacedActionTypes.UPDATE, {
-    //     id,
-    //     source: editedSource,
-    //   });
-    //   console.log(document.getElementById("source_name").value);
-    //   this.$router.push({ name: "pages.sources" });
-    // },
-
     onSubmitClicked() {
-      const { id, name, url } = this.source;
+      const { id, name, config, sourceType, team } = this.source;
 
       const newSource = {
         name,
-        url,
+        config,
+        sourceType,
+        team,
       };
 
       this.$store.dispatch(sources.NamespacedActionTypes.UPDATE, {

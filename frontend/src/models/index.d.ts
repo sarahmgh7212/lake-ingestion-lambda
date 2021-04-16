@@ -1,5 +1,11 @@
 import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplify/datastore";
 
+export enum UserRole {
+  READER = "READER",
+  MANAGER = "MANAGER",
+  OWNER = "OWNER"
+}
+
 export enum PipeStatus {
   DISABLED = "DISABLED",
   ENABLED = "ENABLED"
@@ -10,7 +16,7 @@ export enum PipeStatus {
 export declare class SourceType {
   readonly id: string;
   readonly name: string;
-  readonly configSchema: string;
+  readonly configSchema?: string;
   readonly container?: string;
   readonly taskARN?: string;
   constructor(init: ModelInit<SourceType>);
@@ -39,6 +45,7 @@ export declare class Team {
 
 export declare class TeamUser {
   readonly id: string;
+  readonly role: UserRole | keyof typeof UserRole;
   readonly team: Team;
   readonly user: User;
   constructor(init: ModelInit<TeamUser>);
@@ -48,6 +55,7 @@ export declare class TeamUser {
 export declare class User {
   readonly id: string;
   readonly name: string;
+  readonly role: UserRole | keyof typeof UserRole;
   readonly teams?: (TeamUser | null)[];
   readonly invites?: (Invite | null)[];
   readonly requestedInvites?: (Invite | null)[];
@@ -61,7 +69,6 @@ export declare class Invite {
   readonly requestorId: string;
   readonly user?: User;
   readonly team: Team;
-  readonly requestor?: User;
   constructor(init: ModelInit<Invite>);
   static copyOf(source: Invite, mutator: (draft: MutableModel<Invite>) => MutableModel<Invite> | void): Invite;
 }
@@ -69,10 +76,11 @@ export declare class Invite {
 export declare class Job {
   readonly id: string;
   readonly startedAt?: string;
-  readonly initCompletedAt?: string;
+  readonly initAt?: string;
   readonly completedAt?: string;
   readonly failedAt?: string;
   readonly logsARN?: string;
+  readonly pipe?: Pipe;
   constructor(init: ModelInit<Job>);
   static copyOf(source: Job, mutator: (draft: MutableModel<Job>) => MutableModel<Job> | void): Job;
 }
@@ -83,8 +91,8 @@ export declare class Pipe {
   readonly catalog?: string;
   readonly schedule?: string;
   readonly status?: PipeStatus | keyof typeof PipeStatus;
-  readonly jobId: string;
-  readonly job?: Job;
+  readonly jobId?: string;
+  readonly jobs?: (Job | null)[];
   constructor(init: ModelInit<Pipe>);
   static copyOf(source: Pipe, mutator: (draft: MutableModel<Pipe>) => MutableModel<Pipe> | void): Pipe;
 }

@@ -2,7 +2,14 @@
   <!-- This example requires Tailwind CSS v2.0+ -->
   <div id="list-pipes">
     <div>
-      <button class="bg-red-100" @click="showModal">Add Pipe</button>
+      <button
+        class="bg-red-100 clear -top-6 relative left-16 float-left ml-1 mb-4 bg-light-purple rounded-md py-2 px-4 text-white text-sm font-semibold"
+        @click="showModal"
+      >
+        + Add Pipe
+      </button>
+    </div>
+    <div>
       <AddModal v-show="isModalVisible" @close="closeModal">
         <template v-slot:header>Add a new pipe </template>
         <template v-slot:body>
@@ -19,25 +26,64 @@
               <input
                 type="text"
                 class="border-2 border-gray-300 rounded-lg px-6 mb-5 w-8/12 h-10"
-                v-model="config"
-                placeholder="Config"
+                v-model="catalog"
+                placeholder="Catalog"
               />
             </div>
             <div>
               <input
                 type="text"
                 class="border-2 border-gray-300 rounded-lg px-6 mb-5 w-8/12 h-10"
-                v-model="pipeType"
-                placeholder="Pipe Type"
+                v-model="schedule"
+                placeholder="Schedule"
               />
             </div>
             <div>
+              <!-- <input
+                type="text"
+                class="border-2 border-gray-300 rounded-lg px-6 mb-5 w-8/12 h-10"
+                v-model="team"
+                placeholder="Status"
+              /> -->
+              <select
+                id="pipe-status-select"
+                class="border-2 border-gray-300 rounded-lg px-6 w-8/12 h-10 mb-5 capitalize"
+                v-model="status"
+              >
+                <option :value="null" disabled>
+                  -- Select the Pipe Status --
+                </option>
+                <option
+                  v-for="(value, key) in PipeStatus"
+                  :key="key"
+                  :value="key"
+                  class="capitalize"
+                >
+                  {{ value.toLowerCase() }}
+                </option>
+              </select>
+            </div>
+            <!-- <div>
               <input
                 type="text"
-                class="border-2 border-gray-300 rounded-lg px-6 mb-2 w-8/12 h-10"
+                class="border-2 border-gray-300 rounded-lg px-6 w-8/12 h-10"
                 v-model="team"
-                placeholder="Team"
+                placeholder="Job ID"
               />
+            </div> -->
+            <div>
+              <!-- <p><label for="job-id-select">Choose a job:</label></p> -->
+
+              <!-- <select
+                id="job-id-select"
+                class="border-2 border-gray-300 rounded-lg px-6 w-8/12 h-10"
+                v-model="jobId"
+              >
+                <option value="">-- Select the Job ID --</option>
+                <option v-for="(job, id) in jobs" :key="id" :value="id">
+                  {{ job.id }}
+                </option>
+              </select> -->
             </div>
           </div>
         </template>
@@ -61,8 +107,8 @@
         >
       </AddModal>
     </div>
-    <p class="text-left ml-28 my-4">Pipes</p>
-    <div class="flex flex-col ml-28 mr-12">
+
+    <div class="flex flex-col ml-28 mr-12 mt-8">
       <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
           <div
@@ -87,20 +133,24 @@
                     scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Config
+                    Catalog
                   </th>
                   <th
                     scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Pipe Type
+                    Schedule
                   </th>
                   <th
                     scope="col"
                     class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Team
+                    Status
                   </th>
+                  <th
+                    scope="col"
+                    class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  ></th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
@@ -112,25 +162,26 @@
                   <td class="px-2 py-4 whitespace-nowrap">
                     <div class="flex items-center">
                       <div class="ml-4">
-                        <div class="text-sm font-medium text-gray-900"></div>
+                        <div class="text-sm font-medium text-gray-900">
+                          <!-- {{ pipe.jobId }} -->
+                        </div>
                       </div>
                     </div>
                   </td>
 
                   <td class="px-6 py-4 whitespace-nowrap text-left">
-                    <div class="text-sm text-gray-900">catalog</div>
+                    <div class="text-sm text-gray-900">{{ pipe.catalog }}</div>
                   </td>
 
                   <td
                     class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left"
                   >
-                    Sample Json
+                    {{ pipe.schedule }}
                   </td>
                   <td class="px-2 py-4 whitespace-nowrap text-left">
                     <span
                       class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
-                    >
-                      VSC Team
+                      >{{ pipe.status }}
                     </span>
                   </td>
                   <td>
@@ -171,6 +222,9 @@
 
 <script lang="ts">
 import * as pipes from "../../store/pipes";
+import * as jobs from "../../store/jobs";
+import { PipeStatus } from "../../models";
+
 import MdiIcon from "../../components/MdiIcon.vue";
 import { mapState } from "vuex";
 import { defineComponent } from "vue";
@@ -183,21 +237,25 @@ export default defineComponent({
 
   computed: {
     ...mapState(pipes.NAMESPACE, ["pipes"]),
+    ...mapState(jobs.NAMESPACE, ["jobs"]),
   },
+
   components: {
     MdiIcon,
     AddModal,
   },
+
   data() {
     return {
       pipeName: "",
       catalog: "",
       schedule: "",
-      status: "",
-      jobId: "",
+      status: null,
+      // jobId: "",
       mdiDelete,
       mdiLeadPencil,
       isModalVisible: false,
+      PipeStatus,
     };
   },
 
@@ -208,8 +266,13 @@ export default defineComponent({
         catalog: this.catalog,
         schedule: this.schedule,
         status: this.status,
-        jobId: this.jobId,
+        //  jobId: this.jobId,
       };
+
+      // interface Pipe {
+      //   name: string;
+      //   status: "ACTIVE" | "DISABLED";
+      // }
 
       this.$store.dispatch(pipes.NamespacedActionTypes.CREATE, { pipe });
     },
@@ -230,14 +293,16 @@ export default defineComponent({
       this.isModalVisible = false;
     },
     close() {
-      //close text button on Modal
-      this.$emit("close");
+      this.closeModal();
     },
   },
 
   created() {
     this.$store.dispatch(pipes.NamespacedActionTypes.INIT_LIST);
+    this.$store.dispatch(jobs.NamespacedActionTypes.INIT_LIST);
+
     this.$store.dispatch(pipes.NamespacedActionTypes.SUBSCRIBE);
+    // console.log(PipeStatus);
   },
 });
 </script>

@@ -25,6 +25,12 @@ const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "pages" */ "../views/pages/Jobs.vue"),
   },
   {
+    path: "jobs/:id",
+    name: "pages.editJobs",
+    component: () =>
+      import(/* webpackChunkName: "pages" */ "../views/pages/EditJobs.vue"),
+  },
+  {
     path: "schedule",
     name: "pages.schedule",
     component: () =>
@@ -32,15 +38,29 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "pipes",
-    name: "pages.pipe",
+    name: "pages.pipes",
     component: () =>
       import(/* webpackChunkName: "pages" */ "../views/pages/Pipes.vue"),
+  },
+  {
+    path: "pipes/:id",
+    name: "pages.editPipes",
+    component: () =>
+      import(/* webpackChunkName: "pages" */ "../views/pages/EditPipes.vue"),
   },
   {
     path: "source-types",
     name: "pages.sourceTypes",
     component: () =>
       import(/* webpackChunkName: "pages" */ "../views/pages/SourceTypes.vue"),
+  },
+  {
+    path: "source-types/:id",
+    name: "pages.editSourceTypes",
+    component: () =>
+      import(
+        /* webpackChunkName: "pages" */ "../views/pages/EditSourceTypes.vue"
+      ),
   },
   {
     path: "logs",

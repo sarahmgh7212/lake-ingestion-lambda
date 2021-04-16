@@ -1,10 +1,10 @@
-import type { GenericObject } from '@/libs';
-import { User } from '@/models';
-import { DataStore, OpType } from '@aws-amplify/datastore';
-import type { Module } from 'vuex';
-import { ActionTypes, UserMap, UsersBaseState, MutationTypes } from './types';
+import type { GenericObject } from "@/libs";
+import { User } from "@/models";
+import { DataStore, OpType } from "@aws-amplify/datastore";
+import type { Module } from "vuex";
+import { ActionTypes, UserMap, UsersBaseState, MutationTypes } from "./types";
 
-export * from './types';
+export * from "./types";
 
 export const module: Module<UsersBaseState, GenericObject> = {
   namespaced: true,
@@ -15,8 +15,9 @@ export const module: Module<UsersBaseState, GenericObject> = {
   },
 
   getters: {
-    exists: state => (id: string) => Object.prototype.hasOwnProperty.call(state.users, id),
-    getById: state => (id: string) => state.users[id],
+    exists: (state) => (id: string) =>
+      Object.prototype.hasOwnProperty.call(state.users, id),
+    getById: (state) => (id: string) => state.users[id],
   },
 
   mutations: {
@@ -49,12 +50,12 @@ export const module: Module<UsersBaseState, GenericObject> = {
         acc[cur.id] = cur;
         return acc;
       }, {});
-      
+
       commit(MutationTypes.SET_USERS, { users });
     },
 
     [ActionTypes.SUBSCRIBE]({ commit }) {
-      const subscription = DataStore.observe(User).subscribe(msg => {
+      const subscription = DataStore.observe(User).subscribe((msg) => {
         const user = msg.element;
 
         if ([OpType.INSERT, OpType.UPDATE].includes(msg.opType)) {
@@ -62,7 +63,7 @@ export const module: Module<UsersBaseState, GenericObject> = {
         } else if (msg.opType === OpType.DELETE) {
           commit(MutationTypes.DELETE_USER, { id: user.id });
         } else {
-          throw new Error('Unsupported operation in users subcription');
+          throw new Error("Unsupported operation in users subcription");
         }
       });
 
@@ -71,7 +72,7 @@ export const module: Module<UsersBaseState, GenericObject> = {
 
     [ActionTypes.UNSUBSCRIBE]({ state, commit }) {
       if (!state.subscription) {
-        throw new Error('Users is not currently subscribed');
+        throw new Error("Users is not currently subscribed");
       }
 
       state.subscription.unsubscribe();
@@ -83,7 +84,7 @@ export const module: Module<UsersBaseState, GenericObject> = {
       await DataStore.save(
         new User({
           name: user.name,
-         
+          role: user.role,
         })
       );
     },
@@ -96,9 +97,9 @@ export const module: Module<UsersBaseState, GenericObject> = {
       }
 
       await DataStore.save(
-        User.copyOf(original, updated => {
+        User.copyOf(original, (updated) => {
           updated.name = user.name;
-          
+          updated.role = user.role;
         })
       );
     },
@@ -116,6 +117,6 @@ export const module: Module<UsersBaseState, GenericObject> = {
     [ActionTypes.CLEAR]({ commit, dispatch }) {
       dispatch(ActionTypes.UNSUBSCRIBE);
       commit(MutationTypes.SET_USERS, { users: {} });
-    }
+    },
   },
 };

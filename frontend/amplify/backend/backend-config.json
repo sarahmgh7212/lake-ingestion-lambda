@@ -6,9 +6,10 @@
       "output": {
         "authConfig": {
           "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "authlakeingestion40caa34a"
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 7,
+              "description": "dev-key"
             }
           },
           "additionalAuthenticationProviders": []
@@ -16,12 +17,5 @@
       }
     }
   },
-  "auth": {
-    "lakeingestion40caa34a": {
-      "service": "Cognito",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [],
-      "customAuth": false
-    }
-  }
+  "auth": {}
 }

@@ -1,29 +1,75 @@
 <template>
   <!-- This example requires Tailwind CSS v2.0+ -->
-  <div id="list-sources">
+  <div id="list-sourceTypes">
     <div>
-      <button class="bg-red-100" @click="showModal">Add Source</button>
+      <button
+        class="bg-red-100 clear -top-6 relative left-16 float-left ml-1 mb-4 bg-light-purple rounded-md py-2 px-4 text-white text-sm font-semibold"
+        @click="showModal"
+      >
+        + Add Source Type
+      </button>
+    </div>
+    <div>
       <AddModal v-show="isModalVisible" @close="closeModal">
-        <template v-slot:header>Add a new source </template>
-
+        <template v-slot:header>Add a new Source Type </template>
         <template v-slot:body>
           <div>
             <div>
-              <input type="text" v-model="sourceName" placeholder="Name" />
+              <input
+                type="text"
+                class="border-2 border-gray-300 rounded-lg px-6 mb-5 w-8/12 h-10"
+                v-model="sourceTypeName"
+                placeholder="Name"
+              />
             </div>
-            <div><input type="text" v-model="url" placeholder="URL" /></div>
+            <div>
+              <input
+                type="text"
+                class="border-2 border-gray-300 rounded-lg px-6 mb-5 w-8/12 h-10"
+                v-model="configSchema"
+                placeholder="Config Schema"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                class="border-2 border-gray-300 rounded-lg px-6 mb-5 w-8/12 h-10"
+                v-model="container"
+                placeholder="Container"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                class="border-2 border-gray-300 rounded-lg px-6 mb-2 w-8/12 h-10"
+                v-model="taskARN"
+                placeholder="Task ARN"
+              />
+            </div>
           </div>
         </template>
 
         <template v-slot:footer>
-          <span>
-            <button class="bg-red-100" @click="addSourceClicked">Submit</button>
-          </span></template
+          <div>
+            <button
+              class="w-3/6 bg-light-purple text-white text-center px-1 py-1 mb-3 mr-1 rounded-xl ring-transparent hover:bg-hover-light-purple"
+              @click="addSourceTypeClicked"
+            >
+              Submit
+            </button>
+            <button
+              type="button"
+              class="w-3/6 bg-light-purple text-white text-center px-1 py-1 rounded-xl ring-transparent hover:bg-hover-light-purple"
+              @click="close"
+            >
+              Close
+            </button>
+          </div></template
         >
       </AddModal>
     </div>
-    <p class="text-left ml-28 my-4">Sources</p>
-    <div class="flex flex-col ml-28 mr-12">
+
+    <div class="flex flex-col ml-28 mr-12 mt-10">
       <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
           <div
@@ -65,37 +111,44 @@
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="source in sources" :key="source.id">
+                <tr v-for="sourceType in sourceTypes" :key="sourceType.id">
                   <td class="px-6 py-4 whitespace-nowrap text-left">
-                    <div class="text-sm text-gray-900">{{ source.id }}</div>
+                    <div class="text-sm text-gray-900">{{ sourceType.id }}</div>
                     +++
                   </td>
                   <td class="px-2 py-4 whitespace-nowrap">
                     <div class="flex items-center">
                       <div class="ml-4">
-                        <div class="text-sm font-medium text-gray-900"></div>
+                        <div class="text-sm font-medium text-gray-900">
+                          {{ sourceType.name }}
+                        </div>
                       </div>
                     </div>
                   </td>
 
                   <td class="px-6 py-4 whitespace-nowrap text-left">
-                    <div class="text-sm text-gray-900">{{ source.url }}</div>
+                    <div class="text-sm text-gray-900">
+                      {{ sourceType.configSchema }}
+                    </div>
                   </td>
 
                   <td
                     class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left"
                   >
-                    Sample Json
+                    {{ sourceType.container }}
                   </td>
                   <td class="px-2 py-4 whitespace-nowrap text-left">
                     <span
                       class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
                     >
-                      Completed
+                      {{ sourceType.taskARN }}
                     </span>
                   </td>
                   <td>
-                    <button class="px-2" @click="editSourceClicked(source.id)">
+                    <button
+                      class="px-2"
+                      @click="editSourceTypeClicked(sourceType.id)"
+                    >
                       <MdiIcon
                         :icon="mdiLeadPencil"
                         size="1.5rem"
@@ -107,7 +160,7 @@
                   <td>
                     <button
                       class="text-red-400 font-semibold text-xs px-2"
-                      @click="deleteSourceClicked(source.id)"
+                      @click="deleteSourceTypeClicked(sourceType.id)"
                     >
                       <div class="inline-block">
                         <MdiIcon
@@ -131,7 +184,7 @@
 </template>
 
 <script lang="ts">
-import * as sources from "../../store/sources";
+import * as sourceTypes from "../../store/sourceTypes";
 import MdiIcon from "../../components/MdiIcon.vue";
 import { mapState } from "vuex";
 import { defineComponent } from "vue";
@@ -143,7 +196,7 @@ export default defineComponent({
   name: "SourceTypes",
 
   computed: {
-    ...mapState(sources.NAMESPACE, ["sources"]),
+    ...mapState(sourceTypes.NAMESPACE, ["sourceTypes"]),
   },
   components: {
     MdiIcon,
@@ -151,8 +204,10 @@ export default defineComponent({
   },
   data() {
     return {
-      sourceName: "",
-      url: "",
+      sourceTypeName: "",
+      configSchema: "",
+      container: "",
+      taskARN: "",
       mdiDelete,
       mdiLeadPencil,
       isModalVisible: false,
@@ -160,22 +215,26 @@ export default defineComponent({
   },
 
   methods: {
-    addSourceClicked() {
-      const source = {
-        name: this.sourceName,
-        url: this.url,
+    addSourceTypeClicked() {
+      const sourceType = {
+        name: this.sourceTypeName,
+        configSchema: this.configSchema,
+        container: this.container,
+        taskARN: this.taskARN,
       };
 
-      this.$store.dispatch(sources.NamespacedActionTypes.CREATE, { source });
+      this.$store.dispatch(sourceTypes.NamespacedActionTypes.CREATE, {
+        sourceType,
+      });
     },
 
-    deleteSourceClicked(id: string) {
-      this.$store.dispatch(sources.NamespacedActionTypes.DELETE, { id });
+    deleteSourceTypeClicked(id: string) {
+      this.$store.dispatch(sourceTypes.NamespacedActionTypes.DELETE, { id });
     },
-    editSourceClicked(sourceId: string) {
+    editSourceTypeClicked(sourceTypeId: string) {
       this.$router.push({
-        name: "pages.editSources",
-        params: { id: sourceId },
+        name: "pages.editSourceTypes",
+        params: { id: sourceTypeId },
       });
     },
     showModal() {
@@ -184,11 +243,15 @@ export default defineComponent({
     closeModal() {
       this.isModalVisible = false;
     },
+    close() {
+      //close text button on Modal
+      this.closeModal();
+    },
   },
 
   created() {
-    this.$store.dispatch(sources.NamespacedActionTypes.INIT_LIST);
-    this.$store.dispatch(sources.NamespacedActionTypes.SUBSCRIBE);
+    this.$store.dispatch(sourceTypes.NamespacedActionTypes.INIT_LIST);
+    this.$store.dispatch(sourceTypes.NamespacedActionTypes.SUBSCRIBE);
   },
 });
 </script>

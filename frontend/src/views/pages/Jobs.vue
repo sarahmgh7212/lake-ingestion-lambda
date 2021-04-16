@@ -1,13 +1,277 @@
 <template>
-  <div id="schedule">
-    <h1>Job</h1>
+  <!-- This example requires Tailwind CSS v2.0+ -->
+  <div id="list-jobs">
+    <div>
+      <button
+        class="bg-red-100 clear -top-6 relative left-16 float-left ml-1 mb-4 bg-light-purple rounded-md py-2 px-4 text-white text-sm font-semibold"
+        @click="showModal"
+      >
+        + Add Job
+      </button>
+    </div>
+    <div>
+      <AddModal v-show="isModalVisible" @close="closeModal">
+        <template v-slot:header>Add a new job </template>
+        <template v-slot:body>
+          <div>
+            <div>
+              <input
+                type="text"
+                class="border-2 border-gray-300 rounded-lg px-6 mb-5 w-8/12 h-10"
+                v-model="startedAt"
+                placeholder="Started At"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                class="border-2 border-gray-300 rounded-lg px-6 mb-5 w-8/12 h-10"
+                v-model="initAt"
+                placeholder="Init At"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                class="border-2 border-gray-300 rounded-lg px-6 mb-5 w-8/12 h-10"
+                v-model="completedAt"
+                placeholder="Completed At"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                class="border-2 border-gray-300 rounded-lg px-6 mb-5 w-8/12 h-10"
+                v-model="failedAt"
+                placeholder="Failed At"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                class="border-2 border-gray-300 rounded-lg px-6 w-8/12 h-10"
+                v-model="logsARN"
+                placeholder="Logs ARN"
+              />
+            </div>
+          </div>
+        </template>
+
+        <template v-slot:footer>
+          <div>
+            <button
+              class="w-8/12 bg-light-purple text-white text-center px-1 py-1 mb-3 mr-1 rounded-xl ring-transparent hover:bg-hover-light-purple"
+              @click="addJobClicked"
+            >
+              Submit
+            </button>
+            <button
+              type="button"
+              class="w-8/12 bg-light-purple text-white text-center px-1 py-1 rounded-xl ring-transparent"
+              @click="close"
+            >
+              Close
+            </button>
+          </div></template
+        >
+      </AddModal>
+    </div>
+    <!-- <p class="text-left ml-28 my-4">Jobs</p> -->
+    <div class="flex flex-col ml-28 mr-12 mt-8">
+      <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+          <div
+            class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
+          >
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    ID
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Started At
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Init At
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Completed At
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Failed At
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Logs ARN
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr v-for="job in jobs" :key="job.id">
+                  <td class="px-6 py-4 whitespace-nowrap text-left">
+                    <div class="text-sm text-gray-900">{{ job.id }}</div>
+                    +++
+                  </td>
+                  <td class="px-2 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">
+                          {{ job.startedAt }}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td class="px-6 py-4 whitespace-nowrap text-left">
+                    <div class="text-sm text-gray-900">
+                      {{ job.initAt }}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-left">
+                    <div class="text-sm text-gray-900">
+                      {{ job.completedAt }}
+                    </div>
+                  </td>
+
+                  <td
+                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left"
+                  >
+                    {{ job.failedAt }}
+                  </td>
+                  <td class="px-2 py-4 whitespace-nowrap text-left">
+                    <span
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                    >
+                      {{ job.logsARN }}
+                    </span>
+                  </td>
+                  <td>
+                    <button class="px-2" @click="editJobClicked(job.id)">
+                      <MdiIcon
+                        :icon="mdiLeadPencil"
+                        size="1.5rem"
+                        color="#6366f1"
+                      />
+                    </button>
+                  </td>
+
+                  <td>
+                    <button
+                      class="text-red-400 font-semibold text-xs px-2"
+                      @click="deleteJobClicked(job.id)"
+                    >
+                      <div class="inline-block">
+                        <MdiIcon
+                          :icon="mdiDelete"
+                          size="1.5rem"
+                          color="#6366f1"
+                        />
+                      </div>
+                    </button>
+                  </td>
+                </tr>
+
+                <!-- More items... -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import * as jobs from "../../store/jobs";
+import * as sourceTypes from "../../store/sourceTypes";
+
+import MdiIcon from "../../components/MdiIcon.vue";
+import { mapState } from "vuex";
 import { defineComponent } from "vue";
+import { mdiLeadPencil } from "@mdi/js";
+import { mdiDelete } from "@mdi/js";
+import AddModal from "../../components/AddModal.vue";
+
 export default defineComponent({
-  name: "Job",
+  name: "Jobs",
+
+  computed: {
+    ...mapState(jobs.NAMESPACE, ["jobs"]),
+  },
+  components: {
+    MdiIcon,
+    AddModal,
+  },
+  data() {
+    return {
+      startedAt: "",
+      initAt: "",
+      completedAt: "",
+      failedAt: "",
+      logsARN: "",
+      mdiDelete,
+      mdiLeadPencil,
+      isModalVisible: false,
+    };
+  },
+
+  methods: {
+    addJobClicked() {
+      const job = {
+        startedAt: this.startedAt,
+        initAt: this.initAt,
+        completedAt: this.completedAt,
+        failedAt: this.failedAt,
+        logsARN: this.logsARN,
+      };
+
+      this.$store.dispatch(jobs.NamespacedActionTypes.CREATE, { job });
+    },
+
+    deleteJobClicked(id: string) {
+      this.$store.dispatch(jobs.NamespacedActionTypes.DELETE, { id });
+    },
+    editJobClicked(jobId: string) {
+      this.$router.push({
+        name: "pages.editJobs",
+        params: { id: jobId },
+      });
+    },
+    showModal() {
+      this.isModalVisible = true;
+    },
+    closeModal() {
+      this.isModalVisible = false;
+    },
+    close() {
+      //close text button on Modal
+      this.closeModal();
+    },
+  },
+
+  created() {
+    this.$store.dispatch(jobs.NamespacedActionTypes.INIT_LIST);
+
+    this.$store.dispatch(jobs.NamespacedActionTypes.SUBSCRIBE);
+  },
 });
 </script>
+<style></style>
