@@ -8,7 +8,7 @@
   #set( $query = {
   "expression": "#partitionKey = :partitionKey",
   "expressionNames": {
-      "#partitionKey": "pipeId"
+      "#partitionKey": "teamId"
   },
   "expressionValues": {
       ":partitionKey": {
@@ -40,6 +40,6 @@ $util.toJson($context.args.nextToken)
     #else
 null
     #end,
-      "index": "byPipe"
+      "index": "byTeam"
   }
 #end

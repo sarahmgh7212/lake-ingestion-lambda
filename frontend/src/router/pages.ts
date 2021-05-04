@@ -63,6 +63,30 @@ const routes: Array<RouteRecordRaw> = [
       ),
   },
   {
+    path: "users",
+    name: "pages.users",
+    component: () =>
+      import(/* webpackChunkName: "pages" */ "../views/pages/Users.vue"),
+  },
+  {
+    path: "users/:id",
+    name: "pages.editUsers",
+    component: () =>
+      import(/* webpackChunkName: "pages" */ "../views/pages/EditUsers.vue"),
+  },
+  {
+    path: "teams",
+    name: "pages.teams",
+    component: () =>
+      import(/* webpackChunkName: "pages" */ "../views/pages/Teams.vue"),
+  },
+  {
+    path: "teams/:id",
+    name: "pages.editTeams",
+    component: () =>
+      import(/* webpackChunkName: "pages" */ "../views/pages/EditTeams.vue"),
+  },
+  {
     path: "logs",
     name: "pages.logs",
     component: () =>

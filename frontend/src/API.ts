@@ -85,12 +85,14 @@ export type DeleteSourceTypeInput = {
 
 export type CreateSourceInput = {
   id?: string | null,
+  teamId: string,
   name: string,
   config?: string | null,
   sourceSourceTypeId?: string | null,
 };
 
 export type ModelSourceConditionInput = {
+  teamId?: ModelIDInput | null,
   name?: ModelStringInput | null,
   config?: ModelStringInput | null,
   and?: Array< ModelSourceConditionInput | null > | null,
@@ -98,31 +100,49 @@ export type ModelSourceConditionInput = {
   not?: ModelSourceConditionInput | null,
 };
 
+export type ModelIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
 export type Source = {
   __typename: "Source",
   id?: string,
+  teamId?: string,
   name?: string,
   config?: string | null,
   sourceType?: SourceType,
-  team?: ModelTeamConnection,
+  team?: Team,
   createdAt?: string,
   updatedAt?: string,
-};
-
-export type ModelTeamConnection = {
-  __typename: "ModelTeamConnection",
-  items?:  Array<Team | null > | null,
-  nextToken?: string | null,
 };
 
 export type Team = {
   __typename: "Team",
   id?: string,
   name?: string,
+  sources?: ModelSourceConnection,
   users?: ModelTeamUserConnection,
   invites?: ModelInviteConnection,
   createdAt?: string,
   updatedAt?: string,
+};
+
+export type ModelSourceConnection = {
+  __typename: "ModelSourceConnection",
+  items?:  Array<Source | null > | null,
+  nextToken?: string | null,
 };
 
 export type ModelTeamUserConnection = {
@@ -183,6 +203,7 @@ export type Invite = {
 
 export type UpdateSourceInput = {
   id: string,
+  teamId?: string | null,
   name?: string | null,
   config?: string | null,
   sourceSourceTypeId?: string | null,
@@ -194,6 +215,7 @@ export type DeleteSourceInput = {
 
 export type CreateJobInput = {
   id?: string | null,
+  pipeId: string,
   startedAt?: string | null,
   initAt?: string | null,
   completedAt?: string | null,
@@ -202,6 +224,7 @@ export type CreateJobInput = {
 };
 
 export type ModelJobConditionInput = {
+  pipeId?: ModelIDInput | null,
   startedAt?: ModelStringInput | null,
   initAt?: ModelStringInput | null,
   completedAt?: ModelStringInput | null,
@@ -215,6 +238,7 @@ export type ModelJobConditionInput = {
 export type Job = {
   __typename: "Job",
   id?: string,
+  pipeId?: string,
   startedAt?: string | null,
   initAt?: string | null,
   completedAt?: string | null,
@@ -232,7 +256,6 @@ export type Pipe = {
   catalog?: string | null,
   schedule?: string | null,
   status?: PipeStatus | null,
-  jobId?: string | null,
   jobs?: ModelJobConnection,
   createdAt?: string,
   updatedAt?: string,
@@ -252,6 +275,7 @@ export type ModelJobConnection = {
 
 export type UpdateJobInput = {
   id: string,
+  pipeId?: string | null,
   startedAt?: string | null,
   initAt?: string | null,
   completedAt?: string | null,
@@ -269,7 +293,6 @@ export type CreatePipeInput = {
   catalog?: string | null,
   schedule?: string | null,
   status?: PipeStatus | null,
-  jobId?: string | null,
 };
 
 export type ModelPipeConditionInput = {
@@ -277,7 +300,6 @@ export type ModelPipeConditionInput = {
   catalog?: ModelStringInput | null,
   schedule?: ModelStringInput | null,
   status?: ModelPipeStatusInput | null,
-  jobId?: ModelStringInput | null,
   and?: Array< ModelPipeConditionInput | null > | null,
   or?: Array< ModelPipeConditionInput | null > | null,
   not?: ModelPipeConditionInput | null,
@@ -294,7 +316,6 @@ export type UpdatePipeInput = {
   catalog?: string | null,
   schedule?: string | null,
   status?: PipeStatus | null,
-  jobId?: string | null,
 };
 
 export type DeletePipeInput = {
@@ -333,7 +354,6 @@ export type DeleteUserInput = {
 export type CreateTeamInput = {
   id?: string | null,
   name: string,
-  sourceTeamId?: string | null,
 };
 
 export type ModelTeamConditionInput = {
@@ -346,7 +366,6 @@ export type ModelTeamConditionInput = {
 export type UpdateTeamInput = {
   id: string,
   name?: string | null,
-  sourceTeamId?: string | null,
 };
 
 export type DeleteTeamInput = {
@@ -367,22 +386,6 @@ export type ModelTeamUserConditionInput = {
   and?: Array< ModelTeamUserConditionInput | null > | null,
   or?: Array< ModelTeamUserConditionInput | null > | null,
   not?: ModelTeamUserConditionInput | null,
-};
-
-export type ModelIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
 };
 
 export type UpdateTeamUserInput = {
@@ -445,6 +448,7 @@ export type ModelSourceTypeConnection = {
 
 export type ModelSourceFilterInput = {
   id?: ModelIDInput | null,
+  teamId?: ModelIDInput | null,
   name?: ModelStringInput | null,
   config?: ModelStringInput | null,
   and?: Array< ModelSourceFilterInput | null > | null,
@@ -452,14 +456,9 @@ export type ModelSourceFilterInput = {
   not?: ModelSourceFilterInput | null,
 };
 
-export type ModelSourceConnection = {
-  __typename: "ModelSourceConnection",
-  items?:  Array<Source | null > | null,
-  nextToken?: string | null,
-};
-
 export type ModelJobFilterInput = {
   id?: ModelIDInput | null,
+  pipeId?: ModelIDInput | null,
   startedAt?: ModelStringInput | null,
   initAt?: ModelStringInput | null,
   completedAt?: ModelStringInput | null,
@@ -476,7 +475,6 @@ export type ModelPipeFilterInput = {
   catalog?: ModelStringInput | null,
   schedule?: ModelStringInput | null,
   status?: ModelPipeStatusInput | null,
-  jobId?: ModelStringInput | null,
   and?: Array< ModelPipeFilterInput | null > | null,
   or?: Array< ModelPipeFilterInput | null > | null,
   not?: ModelPipeFilterInput | null,
@@ -509,6 +507,12 @@ export type ModelTeamFilterInput = {
   and?: Array< ModelTeamFilterInput | null > | null,
   or?: Array< ModelTeamFilterInput | null > | null,
   not?: ModelTeamFilterInput | null,
+};
+
+export type ModelTeamConnection = {
+  __typename: "ModelTeamConnection",
+  items?:  Array<Team | null > | null,
+  nextToken?: string | null,
 };
 
 export type ModelTeamUserFilterInput = {
@@ -595,6 +599,7 @@ export type CreateSourceMutation = {
   createSource?:  {
     __typename: "Source",
     id: string,
+    teamId: string,
     name: string,
     config?: string | null,
     sourceType?:  {
@@ -607,10 +612,13 @@ export type CreateSourceMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    team?:  {
-      __typename: "ModelTeamConnection",
-      nextToken?: string | null,
-    } | null,
+    team:  {
+      __typename: "Team",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -625,6 +633,7 @@ export type UpdateSourceMutation = {
   updateSource?:  {
     __typename: "Source",
     id: string,
+    teamId: string,
     name: string,
     config?: string | null,
     sourceType?:  {
@@ -637,10 +646,13 @@ export type UpdateSourceMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    team?:  {
-      __typename: "ModelTeamConnection",
-      nextToken?: string | null,
-    } | null,
+    team:  {
+      __typename: "Team",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -655,6 +667,7 @@ export type DeleteSourceMutation = {
   deleteSource?:  {
     __typename: "Source",
     id: string,
+    teamId: string,
     name: string,
     config?: string | null,
     sourceType?:  {
@@ -667,10 +680,13 @@ export type DeleteSourceMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    team?:  {
-      __typename: "ModelTeamConnection",
-      nextToken?: string | null,
-    } | null,
+    team:  {
+      __typename: "Team",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -685,22 +701,22 @@ export type CreateJobMutation = {
   createJob?:  {
     __typename: "Job",
     id: string,
+    pipeId: string,
     startedAt?: string | null,
     initAt?: string | null,
     completedAt?: string | null,
     failedAt?: string | null,
     logsARN?: string | null,
-    pipe?:  {
+    pipe:  {
       __typename: "Pipe",
       id: string,
       name?: string | null,
       catalog?: string | null,
       schedule?: string | null,
       status?: PipeStatus | null,
-      jobId?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -715,22 +731,22 @@ export type UpdateJobMutation = {
   updateJob?:  {
     __typename: "Job",
     id: string,
+    pipeId: string,
     startedAt?: string | null,
     initAt?: string | null,
     completedAt?: string | null,
     failedAt?: string | null,
     logsARN?: string | null,
-    pipe?:  {
+    pipe:  {
       __typename: "Pipe",
       id: string,
       name?: string | null,
       catalog?: string | null,
       schedule?: string | null,
       status?: PipeStatus | null,
-      jobId?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -745,22 +761,22 @@ export type DeleteJobMutation = {
   deleteJob?:  {
     __typename: "Job",
     id: string,
+    pipeId: string,
     startedAt?: string | null,
     initAt?: string | null,
     completedAt?: string | null,
     failedAt?: string | null,
     logsARN?: string | null,
-    pipe?:  {
+    pipe:  {
       __typename: "Pipe",
       id: string,
       name?: string | null,
       catalog?: string | null,
       schedule?: string | null,
       status?: PipeStatus | null,
-      jobId?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -779,7 +795,6 @@ export type CreatePipeMutation = {
     catalog?: string | null,
     schedule?: string | null,
     status?: PipeStatus | null,
-    jobId?: string | null,
     jobs?:  {
       __typename: "ModelJobConnection",
       nextToken?: string | null,
@@ -802,7 +817,6 @@ export type UpdatePipeMutation = {
     catalog?: string | null,
     schedule?: string | null,
     status?: PipeStatus | null,
-    jobId?: string | null,
     jobs?:  {
       __typename: "ModelJobConnection",
       nextToken?: string | null,
@@ -825,7 +839,6 @@ export type DeletePipeMutation = {
     catalog?: string | null,
     schedule?: string | null,
     status?: PipeStatus | null,
-    jobId?: string | null,
     jobs?:  {
       __typename: "ModelJobConnection",
       nextToken?: string | null,
@@ -929,6 +942,10 @@ export type CreateTeamMutation = {
     __typename: "Team",
     id: string,
     name: string,
+    sources?:  {
+      __typename: "ModelSourceConnection",
+      nextToken?: string | null,
+    } | null,
     users?:  {
       __typename: "ModelTeamUserConnection",
       nextToken?: string | null,
@@ -952,6 +969,10 @@ export type UpdateTeamMutation = {
     __typename: "Team",
     id: string,
     name: string,
+    sources?:  {
+      __typename: "ModelSourceConnection",
+      nextToken?: string | null,
+    } | null,
     users?:  {
       __typename: "ModelTeamUserConnection",
       nextToken?: string | null,
@@ -975,6 +996,10 @@ export type DeleteTeamMutation = {
     __typename: "Team",
     id: string,
     name: string,
+    sources?:  {
+      __typename: "ModelSourceConnection",
+      nextToken?: string | null,
+    } | null,
     users?:  {
       __typename: "ModelTeamUserConnection",
       nextToken?: string | null,
@@ -1231,6 +1256,7 @@ export type GetSourceQuery = {
   getSource?:  {
     __typename: "Source",
     id: string,
+    teamId: string,
     name: string,
     config?: string | null,
     sourceType?:  {
@@ -1243,10 +1269,13 @@ export type GetSourceQuery = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    team?:  {
-      __typename: "ModelTeamConnection",
-      nextToken?: string | null,
-    } | null,
+    team:  {
+      __typename: "Team",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1264,6 +1293,7 @@ export type ListSourcesQuery = {
     items?:  Array< {
       __typename: "Source",
       id: string,
+      teamId: string,
       name: string,
       config?: string | null,
       createdAt: string,
@@ -1281,22 +1311,22 @@ export type GetJobQuery = {
   getJob?:  {
     __typename: "Job",
     id: string,
+    pipeId: string,
     startedAt?: string | null,
     initAt?: string | null,
     completedAt?: string | null,
     failedAt?: string | null,
     logsARN?: string | null,
-    pipe?:  {
+    pipe:  {
       __typename: "Pipe",
       id: string,
       name?: string | null,
       catalog?: string | null,
       schedule?: string | null,
       status?: PipeStatus | null,
-      jobId?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1314,6 +1344,7 @@ export type ListJobsQuery = {
     items?:  Array< {
       __typename: "Job",
       id: string,
+      pipeId: string,
       startedAt?: string | null,
       initAt?: string | null,
       completedAt?: string | null,
@@ -1338,7 +1369,6 @@ export type GetPipeQuery = {
     catalog?: string | null,
     schedule?: string | null,
     status?: PipeStatus | null,
-    jobId?: string | null,
     jobs?:  {
       __typename: "ModelJobConnection",
       nextToken?: string | null,
@@ -1364,7 +1394,6 @@ export type ListPipesQuery = {
       catalog?: string | null,
       schedule?: string | null,
       status?: PipeStatus | null,
-      jobId?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -1429,6 +1458,10 @@ export type GetTeamQuery = {
     __typename: "Team",
     id: string,
     name: string,
+    sources?:  {
+      __typename: "ModelSourceConnection",
+      nextToken?: string | null,
+    } | null,
     users?:  {
       __typename: "ModelTeamUserConnection",
       nextToken?: string | null,
@@ -1613,6 +1646,7 @@ export type OnCreateSourceSubscription = {
   onCreateSource?:  {
     __typename: "Source",
     id: string,
+    teamId: string,
     name: string,
     config?: string | null,
     sourceType?:  {
@@ -1625,10 +1659,13 @@ export type OnCreateSourceSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    team?:  {
-      __typename: "ModelTeamConnection",
-      nextToken?: string | null,
-    } | null,
+    team:  {
+      __typename: "Team",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1638,6 +1675,7 @@ export type OnUpdateSourceSubscription = {
   onUpdateSource?:  {
     __typename: "Source",
     id: string,
+    teamId: string,
     name: string,
     config?: string | null,
     sourceType?:  {
@@ -1650,10 +1688,13 @@ export type OnUpdateSourceSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    team?:  {
-      __typename: "ModelTeamConnection",
-      nextToken?: string | null,
-    } | null,
+    team:  {
+      __typename: "Team",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1663,6 +1704,7 @@ export type OnDeleteSourceSubscription = {
   onDeleteSource?:  {
     __typename: "Source",
     id: string,
+    teamId: string,
     name: string,
     config?: string | null,
     sourceType?:  {
@@ -1675,10 +1717,13 @@ export type OnDeleteSourceSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    team?:  {
-      __typename: "ModelTeamConnection",
-      nextToken?: string | null,
-    } | null,
+    team:  {
+      __typename: "Team",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1688,22 +1733,22 @@ export type OnCreateJobSubscription = {
   onCreateJob?:  {
     __typename: "Job",
     id: string,
+    pipeId: string,
     startedAt?: string | null,
     initAt?: string | null,
     completedAt?: string | null,
     failedAt?: string | null,
     logsARN?: string | null,
-    pipe?:  {
+    pipe:  {
       __typename: "Pipe",
       id: string,
       name?: string | null,
       catalog?: string | null,
       schedule?: string | null,
       status?: PipeStatus | null,
-      jobId?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1713,22 +1758,22 @@ export type OnUpdateJobSubscription = {
   onUpdateJob?:  {
     __typename: "Job",
     id: string,
+    pipeId: string,
     startedAt?: string | null,
     initAt?: string | null,
     completedAt?: string | null,
     failedAt?: string | null,
     logsARN?: string | null,
-    pipe?:  {
+    pipe:  {
       __typename: "Pipe",
       id: string,
       name?: string | null,
       catalog?: string | null,
       schedule?: string | null,
       status?: PipeStatus | null,
-      jobId?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1738,22 +1783,22 @@ export type OnDeleteJobSubscription = {
   onDeleteJob?:  {
     __typename: "Job",
     id: string,
+    pipeId: string,
     startedAt?: string | null,
     initAt?: string | null,
     completedAt?: string | null,
     failedAt?: string | null,
     logsARN?: string | null,
-    pipe?:  {
+    pipe:  {
       __typename: "Pipe",
       id: string,
       name?: string | null,
       catalog?: string | null,
       schedule?: string | null,
       status?: PipeStatus | null,
-      jobId?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1767,7 +1812,6 @@ export type OnCreatePipeSubscription = {
     catalog?: string | null,
     schedule?: string | null,
     status?: PipeStatus | null,
-    jobId?: string | null,
     jobs?:  {
       __typename: "ModelJobConnection",
       nextToken?: string | null,
@@ -1785,7 +1829,6 @@ export type OnUpdatePipeSubscription = {
     catalog?: string | null,
     schedule?: string | null,
     status?: PipeStatus | null,
-    jobId?: string | null,
     jobs?:  {
       __typename: "ModelJobConnection",
       nextToken?: string | null,
@@ -1803,7 +1846,6 @@ export type OnDeletePipeSubscription = {
     catalog?: string | null,
     schedule?: string | null,
     status?: PipeStatus | null,
-    jobId?: string | null,
     jobs?:  {
       __typename: "ModelJobConnection",
       nextToken?: string | null,
@@ -1887,6 +1929,10 @@ export type OnCreateTeamSubscription = {
     __typename: "Team",
     id: string,
     name: string,
+    sources?:  {
+      __typename: "ModelSourceConnection",
+      nextToken?: string | null,
+    } | null,
     users?:  {
       __typename: "ModelTeamUserConnection",
       nextToken?: string | null,
@@ -1905,6 +1951,10 @@ export type OnUpdateTeamSubscription = {
     __typename: "Team",
     id: string,
     name: string,
+    sources?:  {
+      __typename: "ModelSourceConnection",
+      nextToken?: string | null,
+    } | null,
     users?:  {
       __typename: "ModelTeamUserConnection",
       nextToken?: string | null,
@@ -1923,6 +1973,10 @@ export type OnDeleteTeamSubscription = {
     __typename: "Team",
     id: string,
     name: string,
+    sources?:  {
+      __typename: "ModelSourceConnection",
+      nextToken?: string | null,
+    } | null,
     users?:  {
       __typename: "ModelTeamUserConnection",
       nextToken?: string | null,

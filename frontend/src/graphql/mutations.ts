@@ -57,6 +57,7 @@ export const createSource = /* GraphQL */ `
   ) {
     createSource(input: $input, condition: $condition) {
       id
+      teamId
       name
       config
       sourceType {
@@ -69,7 +70,10 @@ export const createSource = /* GraphQL */ `
         updatedAt
       }
       team {
-        nextToken
+        id
+        name
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -83,6 +87,7 @@ export const updateSource = /* GraphQL */ `
   ) {
     updateSource(input: $input, condition: $condition) {
       id
+      teamId
       name
       config
       sourceType {
@@ -95,7 +100,10 @@ export const updateSource = /* GraphQL */ `
         updatedAt
       }
       team {
-        nextToken
+        id
+        name
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -109,6 +117,7 @@ export const deleteSource = /* GraphQL */ `
   ) {
     deleteSource(input: $input, condition: $condition) {
       id
+      teamId
       name
       config
       sourceType {
@@ -121,7 +130,10 @@ export const deleteSource = /* GraphQL */ `
         updatedAt
       }
       team {
-        nextToken
+        id
+        name
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -135,6 +147,7 @@ export const createJob = /* GraphQL */ `
   ) {
     createJob(input: $input, condition: $condition) {
       id
+      pipeId
       startedAt
       initAt
       completedAt
@@ -146,7 +159,6 @@ export const createJob = /* GraphQL */ `
         catalog
         schedule
         status
-        jobId
         createdAt
         updatedAt
       }
@@ -162,6 +174,7 @@ export const updateJob = /* GraphQL */ `
   ) {
     updateJob(input: $input, condition: $condition) {
       id
+      pipeId
       startedAt
       initAt
       completedAt
@@ -173,7 +186,6 @@ export const updateJob = /* GraphQL */ `
         catalog
         schedule
         status
-        jobId
         createdAt
         updatedAt
       }
@@ -189,6 +201,7 @@ export const deleteJob = /* GraphQL */ `
   ) {
     deleteJob(input: $input, condition: $condition) {
       id
+      pipeId
       startedAt
       initAt
       completedAt
@@ -200,7 +213,6 @@ export const deleteJob = /* GraphQL */ `
         catalog
         schedule
         status
-        jobId
         createdAt
         updatedAt
       }
@@ -220,7 +232,6 @@ export const createPipe = /* GraphQL */ `
       catalog
       schedule
       status
-      jobId
       jobs {
         nextToken
       }
@@ -240,7 +251,6 @@ export const updatePipe = /* GraphQL */ `
       catalog
       schedule
       status
-      jobId
       jobs {
         nextToken
       }
@@ -260,7 +270,6 @@ export const deletePipe = /* GraphQL */ `
       catalog
       schedule
       status
-      jobId
       jobs {
         nextToken
       }
@@ -346,6 +355,9 @@ export const createTeam = /* GraphQL */ `
     createTeam(input: $input, condition: $condition) {
       id
       name
+      sources {
+        nextToken
+      }
       users {
         nextToken
       }
@@ -365,6 +377,9 @@ export const updateTeam = /* GraphQL */ `
     updateTeam(input: $input, condition: $condition) {
       id
       name
+      sources {
+        nextToken
+      }
       users {
         nextToken
       }
@@ -384,6 +399,9 @@ export const deleteTeam = /* GraphQL */ `
     deleteTeam(input: $input, condition: $condition) {
       id
       name
+      sources {
+        nextToken
+      }
       users {
         nextToken
       }

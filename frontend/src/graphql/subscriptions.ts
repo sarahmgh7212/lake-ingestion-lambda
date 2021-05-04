@@ -45,6 +45,7 @@ export const onCreateSource = /* GraphQL */ `
   subscription OnCreateSource {
     onCreateSource {
       id
+      teamId
       name
       config
       sourceType {
@@ -57,7 +58,10 @@ export const onCreateSource = /* GraphQL */ `
         updatedAt
       }
       team {
-        nextToken
+        id
+        name
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -68,6 +72,7 @@ export const onUpdateSource = /* GraphQL */ `
   subscription OnUpdateSource {
     onUpdateSource {
       id
+      teamId
       name
       config
       sourceType {
@@ -80,7 +85,10 @@ export const onUpdateSource = /* GraphQL */ `
         updatedAt
       }
       team {
-        nextToken
+        id
+        name
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -91,6 +99,7 @@ export const onDeleteSource = /* GraphQL */ `
   subscription OnDeleteSource {
     onDeleteSource {
       id
+      teamId
       name
       config
       sourceType {
@@ -103,7 +112,10 @@ export const onDeleteSource = /* GraphQL */ `
         updatedAt
       }
       team {
-        nextToken
+        id
+        name
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -114,6 +126,7 @@ export const onCreateJob = /* GraphQL */ `
   subscription OnCreateJob {
     onCreateJob {
       id
+      pipeId
       startedAt
       initAt
       completedAt
@@ -125,7 +138,6 @@ export const onCreateJob = /* GraphQL */ `
         catalog
         schedule
         status
-        jobId
         createdAt
         updatedAt
       }
@@ -138,6 +150,7 @@ export const onUpdateJob = /* GraphQL */ `
   subscription OnUpdateJob {
     onUpdateJob {
       id
+      pipeId
       startedAt
       initAt
       completedAt
@@ -149,7 +162,6 @@ export const onUpdateJob = /* GraphQL */ `
         catalog
         schedule
         status
-        jobId
         createdAt
         updatedAt
       }
@@ -162,6 +174,7 @@ export const onDeleteJob = /* GraphQL */ `
   subscription OnDeleteJob {
     onDeleteJob {
       id
+      pipeId
       startedAt
       initAt
       completedAt
@@ -173,7 +186,6 @@ export const onDeleteJob = /* GraphQL */ `
         catalog
         schedule
         status
-        jobId
         createdAt
         updatedAt
       }
@@ -190,7 +202,6 @@ export const onCreatePipe = /* GraphQL */ `
       catalog
       schedule
       status
-      jobId
       jobs {
         nextToken
       }
@@ -207,7 +218,6 @@ export const onUpdatePipe = /* GraphQL */ `
       catalog
       schedule
       status
-      jobId
       jobs {
         nextToken
       }
@@ -224,7 +234,6 @@ export const onDeletePipe = /* GraphQL */ `
       catalog
       schedule
       status
-      jobId
       jobs {
         nextToken
       }
@@ -298,6 +307,9 @@ export const onCreateTeam = /* GraphQL */ `
     onCreateTeam {
       id
       name
+      sources {
+        nextToken
+      }
       users {
         nextToken
       }
@@ -314,6 +326,9 @@ export const onUpdateTeam = /* GraphQL */ `
     onUpdateTeam {
       id
       name
+      sources {
+        nextToken
+      }
       users {
         nextToken
       }
@@ -330,6 +345,9 @@ export const onDeleteTeam = /* GraphQL */ `
     onDeleteTeam {
       id
       name
+      sources {
+        nextToken
+      }
       users {
         nextToken
       }

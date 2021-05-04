@@ -88,14 +88,18 @@ export const module: Module<SourcesBaseState, GenericObject> = {
     },
 
     async [ActionTypes.CREATE](ctx, { source }) {
-      await DataStore.save(
-        new Source({
-          name: source.name,
-          config: source.config,
-          sourceType: source.sourceType,
-          team: source.team,
-        })
-      );
+      const newSource = new Source({
+        name: source.name,
+        config: source.config,
+        sourceType: source.sourceType,
+        team: source.team,
+      });
+
+      console.log("dfsdfsdfds");
+
+      await DataStore.save(newSource);
+
+      console.log("dfsdfsd");
     },
 
     async [ActionTypes.UPDATE]({ getters }, { id, source }) {

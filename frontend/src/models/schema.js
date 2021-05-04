@@ -78,7 +78,7 @@ export const schema = {
                     "type": {
                         "model": "SourceType"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": [],
                     "association": {
                         "connectionType": "BELONGS_TO",
@@ -87,16 +87,15 @@ export const schema = {
                 },
                 "team": {
                     "name": "team",
-                    "isArray": true,
+                    "isArray": false,
                     "type": {
                         "model": "Team"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": [],
-                    "isArrayNullable": true,
                     "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "sourceTeamId"
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "teamId"
                     }
                 }
             },
@@ -106,6 +105,15 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byTeam",
+                        "fields": [
+                            "teamId"
+                        ]
+                    }
                 }
             ]
         },
@@ -125,6 +133,20 @@ export const schema = {
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
+                },
+                "sources": {
+                    "name": "sources",
+                    "isArray": true,
+                    "type": {
+                        "model": "Source"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "team"
+                    }
                 },
                 "users": {
                     "name": "users",
@@ -153,13 +175,6 @@ export const schema = {
                         "connectionType": "HAS_MANY",
                         "associatedWith": "team"
                     }
-                },
-                "sourceTeamId": {
-                    "name": "sourceTeamId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
                 }
             },
             "syncable": true,
@@ -464,11 +479,11 @@ export const schema = {
                     "type": {
                         "model": "Pipe"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": [],
                     "association": {
                         "connectionType": "BELONGS_TO",
-                        "targetName": "id"
+                        "targetName": "pipeId"
                     }
                 }
             },
@@ -478,6 +493,15 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byPipe",
+                        "fields": [
+                            "pipeId"
+                        ]
+                    }
                 }
             ]
         },
@@ -518,13 +542,6 @@ export const schema = {
                     "type": {
                         "enum": "PipeStatus"
                     },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "jobId": {
-                    "name": "jobId",
-                    "isArray": false,
-                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -571,5 +588,5 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "version": "8ff30e1bb29bb3b5d8395bf24c1a1200"
+    "version": "5c833a0510c2db001b7374388f233d7c"
 };

@@ -6,24 +6,24 @@ type SourceType @model {
   taskARN: String
 }
 
-type Source @model {
+type Source @model @key(name: "byTeam", fields: ["teamId"]) {
   id: ID!
+  teamId: ID!
   name: String!
   config: String
-  sourceType: SourceType @connection(keyName: "bySourceType")
-  team: [Team] @connection(keyName: "bySource")
+  sourceType: SourceType! @connection(keyName: "bySourceType")
+  team: Team! @connection(fields: ["teamId"])
 }
 
-type Job @model {
+type Job @model @key(name: "byPipe", fields: ["pipeId"]) {
   id: ID!
-  # pipe: Pipe
-  # pipeId: ID!
-  startedAt: AWSDateTime
+  pipeId: ID!
+  startedAt: AWSDateTime #ex: 2018-05-09T12:50:41.337510
   initAt: AWSDateTime
   completedAt: AWSDateTime
   failedAt: AWSDateTime
   logsARN: String
-  pipe: Pipe @connection(fields: ["id"])
+  pipe: Pipe! @connection(fields: ["pipeId"])
 }
 
 type Pipe @model {
@@ -32,8 +32,7 @@ type Pipe @model {
   catalog: AWSJSON
   schedule: String #cron string
   status: PipeStatus
-  jobId: String
-  jobs: [Job] @connection(fields: ["id"])
+  jobs: [Job] @connection(keyName: "byPipe", fields: ["id"])
 }
 
 enum PipeStatus {
@@ -58,7 +57,7 @@ enum UserRole {
 type Team @model {
   id: ID!
   name: String!
-
+  sources: [Source] @connection(keyName: "byTeam", fields: ["id"])
   users: [TeamUser] @connection(keyName: "byTeam", fields: ["id"])
   invites: [Invite] @connection(keyName: "byTeam", fields: ["id"])
 }

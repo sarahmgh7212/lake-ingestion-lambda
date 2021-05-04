@@ -18,6 +18,14 @@
               <input
                 type="text"
                 class="border-2 border-gray-300 rounded-lg px-6 mb-5 w-8/12 h-10"
+                v-model="pipeId"
+                placeholder="Pipe ID"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                class="border-2 border-gray-300 rounded-lg px-6 mb-5 w-8/12 h-10"
                 v-model="startedAt"
                 placeholder="Started At"
               />
@@ -70,7 +78,7 @@
               class="w-8/12 bg-light-purple text-white text-center px-1 py-1 rounded-xl ring-transparent"
               @click="close"
             >
-              Close
+              Cancel
             </button>
           </div></template
         >
@@ -91,6 +99,12 @@
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
                     ID
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Pipe ID
                   </th>
                   <th
                     scope="col"
@@ -129,6 +143,15 @@
                   <td class="px-6 py-4 whitespace-nowrap text-left">
                     <div class="text-sm text-gray-900">{{ job.id }}</div>
                     +++
+                  </td>
+                  <td class="px-2 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">
+                          {{ job.pipeId }}
+                        </div>
+                      </div>
+                    </div>
                   </td>
                   <td class="px-2 py-4 whitespace-nowrap">
                     <div class="flex items-center">
@@ -201,7 +224,7 @@
 
 <script lang="ts">
 import * as jobs from "../../store/jobs";
-import * as sourceTypes from "../../store/sourceTypes";
+import * as pipes from "../../store/pipes";
 
 import MdiIcon from "../../components/MdiIcon.vue";
 import { mapState } from "vuex";
@@ -215,6 +238,7 @@ export default defineComponent({
 
   computed: {
     ...mapState(jobs.NAMESPACE, ["jobs"]),
+    ...mapState(pipes.NAMESPACE, ["pipes"]),
   },
   components: {
     MdiIcon,
@@ -222,6 +246,7 @@ export default defineComponent({
   },
   data() {
     return {
+      pipeId: "",
       startedAt: "",
       initAt: "",
       completedAt: "",
@@ -236,6 +261,7 @@ export default defineComponent({
   methods: {
     addJobClicked() {
       const job = {
+        pipeId: this.pipeId,
         startedAt: this.startedAt,
         initAt: this.initAt,
         completedAt: this.completedAt,
@@ -244,6 +270,7 @@ export default defineComponent({
       };
 
       this.$store.dispatch(jobs.NamespacedActionTypes.CREATE, { job });
+      this.isModalVisible = false;
     },
 
     deleteJobClicked(id: string) {
@@ -269,8 +296,9 @@ export default defineComponent({
 
   created() {
     this.$store.dispatch(jobs.NamespacedActionTypes.INIT_LIST);
-
+    this.$store.dispatch(pipes.NamespacedActionTypes.INIT_LIST);
     this.$store.dispatch(jobs.NamespacedActionTypes.SUBSCRIBE);
+    console.log(this.$store.state.pipes);
   },
 });
 </script>

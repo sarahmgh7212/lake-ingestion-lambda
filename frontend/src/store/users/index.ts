@@ -3,7 +3,6 @@ import { User } from "@/models";
 import { DataStore, OpType } from "@aws-amplify/datastore";
 import type { Module } from "vuex";
 import { ActionTypes, UserMap, UsersBaseState, MutationTypes } from "./types";
-
 export * from "./types";
 
 export const module: Module<UsersBaseState, GenericObject> = {
@@ -21,15 +20,15 @@ export const module: Module<UsersBaseState, GenericObject> = {
   },
 
   mutations: {
-    [MutationTypes.SET_USERS](state, { users }) {
+    [MutationTypes.SET_SOURCES](state, { users }) {
       state.users = users;
     },
 
-    [MutationTypes.UPSERT_USER](state, { id, user }) {
+    [MutationTypes.UPSERT_SOURCE](state, { id, user }) {
       state.users[id] = user;
     },
 
-    [MutationTypes.DELETE_USER](state, { id }) {
+    [MutationTypes.DELETE_SOURCE](state, { id }) {
       if (!Object.prototype.hasOwnProperty.call(state.users, id)) {
         throw new Error(`No user '${id}' found in users`);
       }
@@ -51,7 +50,7 @@ export const module: Module<UsersBaseState, GenericObject> = {
         return acc;
       }, {});
 
-      commit(MutationTypes.SET_USERS, { users });
+      commit(MutationTypes.SET_SOURCES, { users });
     },
 
     [ActionTypes.SUBSCRIBE]({ commit }) {
@@ -59,9 +58,9 @@ export const module: Module<UsersBaseState, GenericObject> = {
         const user = msg.element;
 
         if ([OpType.INSERT, OpType.UPDATE].includes(msg.opType)) {
-          commit(MutationTypes.UPSERT_USER, { id: user.id, user });
+          commit(MutationTypes.UPSERT_SOURCE, { id: user.id, user });
         } else if (msg.opType === OpType.DELETE) {
-          commit(MutationTypes.DELETE_USER, { id: user.id });
+          commit(MutationTypes.DELETE_SOURCE, { id: user.id });
         } else {
           throw new Error("Unsupported operation in users subcription");
         }
@@ -116,7 +115,7 @@ export const module: Module<UsersBaseState, GenericObject> = {
 
     [ActionTypes.CLEAR]({ commit, dispatch }) {
       dispatch(ActionTypes.UNSUBSCRIBE);
-      commit(MutationTypes.SET_USERS, { users: {} });
+      commit(MutationTypes.SET_SOURCES, { users: {} });
     },
   },
 };

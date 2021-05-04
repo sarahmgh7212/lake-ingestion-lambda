@@ -39,6 +39,7 @@ export const getSource = /* GraphQL */ `
   query GetSource($id: ID!) {
     getSource(id: $id) {
       id
+      teamId
       name
       config
       sourceType {
@@ -51,7 +52,10 @@ export const getSource = /* GraphQL */ `
         updatedAt
       }
       team {
-        nextToken
+        id
+        name
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -67,6 +71,7 @@ export const listSources = /* GraphQL */ `
     listSources(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        teamId
         name
         config
         createdAt
@@ -80,6 +85,7 @@ export const getJob = /* GraphQL */ `
   query GetJob($id: ID!) {
     getJob(id: $id) {
       id
+      pipeId
       startedAt
       initAt
       completedAt
@@ -91,7 +97,6 @@ export const getJob = /* GraphQL */ `
         catalog
         schedule
         status
-        jobId
         createdAt
         updatedAt
       }
@@ -109,6 +114,7 @@ export const listJobs = /* GraphQL */ `
     listJobs(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        pipeId
         startedAt
         initAt
         completedAt
@@ -129,7 +135,6 @@ export const getPipe = /* GraphQL */ `
       catalog
       schedule
       status
-      jobId
       jobs {
         nextToken
       }
@@ -151,7 +156,6 @@ export const listPipes = /* GraphQL */ `
         catalog
         schedule
         status
-        jobId
         createdAt
         updatedAt
       }
@@ -202,6 +206,9 @@ export const getTeam = /* GraphQL */ `
     getTeam(id: $id) {
       id
       name
+      sources {
+        nextToken
+      }
       users {
         nextToken
       }

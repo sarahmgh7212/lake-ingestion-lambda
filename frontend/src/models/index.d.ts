@@ -27,8 +27,8 @@ export declare class Source {
   readonly id: string;
   readonly name: string;
   readonly config?: string;
-  readonly sourceType?: SourceType;
-  readonly team?: (Team | null)[];
+  readonly sourceType: SourceType;
+  readonly team: Team;
   constructor(init: ModelInit<Source>);
   static copyOf(source: Source, mutator: (draft: MutableModel<Source>) => MutableModel<Source> | void): Source;
 }
@@ -36,9 +36,9 @@ export declare class Source {
 export declare class Team {
   readonly id: string;
   readonly name: string;
+  readonly sources?: (Source | null)[];
   readonly users?: (TeamUser | null)[];
   readonly invites?: (Invite | null)[];
-  readonly sourceTeamId?: string;
   constructor(init: ModelInit<Team>);
   static copyOf(source: Team, mutator: (draft: MutableModel<Team>) => MutableModel<Team> | void): Team;
 }
@@ -80,7 +80,7 @@ export declare class Job {
   readonly completedAt?: string;
   readonly failedAt?: string;
   readonly logsARN?: string;
-  readonly pipe?: Pipe;
+  readonly pipe: Pipe;
   constructor(init: ModelInit<Job>);
   static copyOf(source: Job, mutator: (draft: MutableModel<Job>) => MutableModel<Job> | void): Job;
 }
@@ -91,7 +91,6 @@ export declare class Pipe {
   readonly catalog?: string;
   readonly schedule?: string;
   readonly status?: PipeStatus | keyof typeof PipeStatus;
-  readonly jobId?: string;
   readonly jobs?: (Job | null)[];
   constructor(init: ModelInit<Pipe>);
   static copyOf(source: Pipe, mutator: (draft: MutableModel<Pipe>) => MutableModel<Pipe> | void): Pipe;

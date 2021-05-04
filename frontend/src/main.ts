@@ -15,5 +15,5 @@ createApp(App).use(store).use(router).mount("#app");
 //https://docs.amplify.aws/cli/usage/mock#api-mocking-setup
 //https://m-square.com.au/new-local-mocking-and-testing-with-the-amplify-cli/
 
-//@ts-ignore This is very bad don't do it
-window.store = store;
+// //@ts-ignore This is very bad don't do it
+// window.store = store;

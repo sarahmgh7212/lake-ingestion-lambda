@@ -36,7 +36,7 @@
         >
       </div>
     </router-link>
-    <router-link :to="{ name: 'pages.destinations' }">
+    <!-- <router-link :to="{ name: 'pages.destinations' }">
       <div class="flex flex-row items-center py-3">
         <div class="inline-block">
           <MdiIcon :icon="mdiDatabaseArrowLeft" size="2rem" color="red" />
@@ -46,7 +46,7 @@
           >Destinations</span
         >
       </div>
-    </router-link>
+    </router-link> -->
     <router-link :to="{ name: 'pages.pipes' }">
       <div class="flex flex-row items-center py-3">
         <div class="inline-block">
@@ -80,6 +80,29 @@
         >
       </div>
     </router-link>
+    <router-link :to="{ name: 'pages.users' }">
+      <div class="flex flex-row items-center py-3">
+        <div class="inline-block">
+          <MdiIcon :icon="mdiAccountTie" size="2rem" color="red" />
+        </div>
+        <span
+          class="w-full inline-block pb-1 md:pb-0 text-sm -ml-6 mt-2 text-gray-600 hover:text-indigo-400"
+          >users</span
+        >
+      </div>
+    </router-link>
+    <router-link :to="{ name: 'pages.teams' }">
+      <div class="flex flex-row items-center py-3">
+        <div class="inline-block">
+          <MdiIcon :icon="mdiAccountMultiple" size="2rem" color="red" />
+        </div>
+        <span
+          class="w-full inline-block pb-1 md:pb-0 text-sm -ml-6 mt-2 text-gray-600 hover:text-indigo-400"
+          >teams</span
+        >
+      </div>
+    </router-link>
+
     <router-link :to="{ name: 'pages.logs' }">
       <div class="flex flex-row items-center py-3">
         <div class="inline-block">
@@ -107,6 +130,8 @@ import {
   mdiBriefcaseEdit,
   mdiAxisYArrow,
   mdiAlphaTCircle,
+  mdiAccountTie,
+  mdiAccountMultiple,
 } from "@mdi/js";
 import { defineComponent } from "vue";
 export default defineComponent({
@@ -125,6 +150,8 @@ export default defineComponent({
       mdiBriefcaseEdit,
       mdiAxisYArrow,
       mdiAlphaTCircle,
+      mdiAccountTie,
+      mdiAccountMultiple,
     };
   },
 });

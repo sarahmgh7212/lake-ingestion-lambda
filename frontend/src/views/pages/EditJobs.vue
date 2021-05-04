@@ -9,6 +9,14 @@
               <input
                 type="text"
                 class="border-2 border-gray-300 rounded-lg px-6 mb-5 mt-10 w-6/12 h-10"
+                v-model="job.pipeId"
+                placeholder="Pipe ID"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                class="border-2 border-gray-300 rounded-lg px-6 mb-5 mt-10 w-6/12 h-10"
                 v-model="job.startedAt"
                 placeholder="Started At"
               />
@@ -79,6 +87,7 @@ export default defineComponent({
     onSubmitClicked() {
       const {
         id,
+        pipeId,
         startedAt,
         initAt,
         completedAt,
@@ -87,6 +96,7 @@ export default defineComponent({
       } = this.job;
 
       const newJob = {
+        pipeId,
         startedAt,
         initAt,
         completedAt,

@@ -86,7 +86,7 @@ export const module: Module<PipesBaseState, GenericObject> = {
           catalog: pipe.catalog,
           schedule: pipe.schedule,
           status: pipe.status,
-          jobId: pipe.jobId,
+          // jobId: pipe.jobId,
         })
       );
     },
@@ -104,7 +104,7 @@ export const module: Module<PipesBaseState, GenericObject> = {
           updated.catalog = pipe.catalog;
           updated.schedule = pipe.schedule;
           updated.status = pipe.status;
-          updated.jobId = pipe.jobId;
+          // updated.jobId = pipe.jobId;
         })
       );
     },
