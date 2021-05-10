@@ -43,3 +43,4 @@ amplify-build-config.json
 amplify-gradle-config.json
 amplifytools.xcconfig
 .secret-*
+../../lake-ingestion/frontend/amplify/mock-data

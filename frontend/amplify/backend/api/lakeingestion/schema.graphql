@@ -1,3 +1,15 @@
+# type Query {
+#   todos: [Todo] @function(name: "lakeingestionf169d28d")
+#   getTodo: Todo @function(name: "lakeingestionf169d28d")
+#   # listSourceTypes: [SourceType] @function(name: "lakeingestionf169d28d")
+# }
+
+type Todo {
+  id: ID!
+  name: String!
+  description: String
+}
+
 type SourceType @model {
   id: ID!
   name: String!
